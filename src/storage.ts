@@ -9,12 +9,12 @@ const EMPTY_STATE: PersistedState = {
 };
 
 export async function loadState(): Promise<PersistedState> {
-  const raw = await AsyncStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return EMPTY_STATE;
-  }
-
   try {
+    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return EMPTY_STATE;
+    }
+
     const parsed = JSON.parse(raw) as PersistedState;
     return {
       sessions: Array.isArray(parsed.sessions) ? parsed.sessions : [],

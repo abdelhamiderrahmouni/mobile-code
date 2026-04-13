@@ -54,16 +54,23 @@ export default function App() {
   useEffect(() => {
     let active = true;
     (async () => {
-      const state = await loadState();
-      if (!active) {
-        return;
+      try {
+        const state = await loadState();
+        if (!active) {
+          return;
+        }
+        setSessions(state.sessions);
+        setFavoriteModelIds(state.favoriteModelIds);
+        setSettings(state.settings);
+        setServerUrlDraft(state.settings.serverUrl);
+        setCurrentSessionId(state.sessions[0]?.id ?? null);
+      } catch {
+        // loadState failed; leave state at defaults
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
       }
-      setSessions(state.sessions);
-      setFavoriteModelIds(state.favoriteModelIds);
-      setSettings(state.settings);
-      setServerUrlDraft(state.settings.serverUrl);
-      setCurrentSessionId(state.sessions[0]?.id ?? null);
-      setIsLoading(false);
     })();
 
     return () => {

@@ -22,6 +22,10 @@ type Screen = 'sessions' | 'chat' | 'models' | 'settings';
 let idCounter = 0;
 
 function makeId(prefix: string): string {
+  const uuid = globalThis.crypto?.randomUUID?.();
+  if (uuid) {
+    return `${prefix}_${uuid}`;
+  }
   idCounter += 1;
   return `${prefix}_${Date.now()}_${idCounter}`;
 }

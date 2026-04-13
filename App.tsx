@@ -19,8 +19,11 @@ import { AppSettings, ChatMessage, Session } from './src/types';
 
 type Screen = 'sessions' | 'chat' | 'models' | 'settings';
 
+let idCounter = 0;
+
 function makeId(prefix: string): string {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  idCounter += 1;
+  return `${prefix}_${Date.now()}_${idCounter}`;
 }
 
 function makeSessionTitle(index: number): string {

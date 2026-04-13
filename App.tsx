@@ -19,15 +19,18 @@ import { AppSettings, ChatMessage, Session } from './src/types';
 
 type Screen = 'sessions' | 'chat' | 'models' | 'settings';
 
-let idCounter = 0;
+function makeFallbackToken(): string {
+  if (globalThis.crypto?.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    globalThis.crypto.getRandomValues(bytes);
+    return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  }
+  return `${Date.now()}_${new Date().toISOString().replace(/\\W/g, '')}`;
+}
 
 function makeId(prefix: string): string {
   const uuid = globalThis.crypto?.randomUUID?.();
-  if (uuid) {
-    return `${prefix}_${uuid}`;
-  }
-  idCounter += 1;
-  return `${prefix}_${Date.now()}_${idCounter}`;
+  return `${prefix}_${uuid ?? makeFallbackToken()}`;
 }
 
 function makeSessionTitle(index: number): string {
